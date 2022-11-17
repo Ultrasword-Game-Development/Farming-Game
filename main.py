@@ -37,7 +37,9 @@ background = (255, 255, 255)
 
 # -------------------------------------------------- #
 # external imports
+import random
 
+from scripts.environment import grass
 
 # -------------------------------------------------- #
 # default initializing world
@@ -51,6 +53,25 @@ _WORLD = __layer.world
 # -------------------------------------------------- #
 # object initialization
 
+
+# grass
+left = -2
+right = 3
+grass_count = 5
+
+# left = 0
+# right = 1
+# grass_count = 300
+for x in range(left, right):
+    for y in range(left, right):
+        GG = grass.GrassHandler("assets/env/grass.json")
+        GG.position.xy = (x * EGLOB.CHUNK_PIX_WIDTH, y * EGLOB.CHUNK_PIX_HEIGHT)
+        GG.move_to_position()
+        GG.calculate_rel_hitbox()
+        for i in range(grass_count):
+            GG.add_grass(random.randint(0, EGLOB.CHUNK_PIX_WIDTH-GG.assets.get_dimensions(0)[0]//3), random.randint(0, EGLOB.CHUNK_PIX_HEIGHT - GG.assets.get_dimensions(0)[1]//3))
+        # print(GG.chunk, GG.p_chunk)
+        _WORLD.add_env_obj(GG)
 
 # -------------------------------------------------- #
 
