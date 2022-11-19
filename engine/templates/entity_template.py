@@ -1,7 +1,7 @@
 """
-Plant.py
+template.py
 
-- Plant object
+- template object
 """
 # -------------------------------------------------- #
 # imports
@@ -20,17 +20,17 @@ from engine import singleton as EGLOB
 from scripts import entityext, animationext, singleton
 
 # -------------------------------------------------- #
-animation.load_and_parse_aseprite_animation("assets/sprites/default_plant.json")
+animation.load_and_parse_aseprite_animation("insert/file/path")
 
 # -------------------------------------------------- #
 # class
 
-class Plant(entityext.GameEntity):
-    TYPE = "Plant"
+class Template(entityext.GameEntity):
+    TYPE = "Template"
 
     # -------------------------------------------------- #
     # animations
-    ANIM_CAT = "default_plant"
+    ANIM_CAT = "template"
     IDLE_ANIM = "idle"
 
     # load
@@ -43,7 +43,7 @@ class Plant(entityext.GameEntity):
 
     # -------------------------------------------------- #
     # signals
-    MOVEMENT_SIGNAL = "Plant-move"
+    MOVEMENT_SIGNAL = "template-move"
 
     # wrappers
     MOVEMENT_WRAPPER = Eventhandler.register_to_signal(MOVEMENT_SIGNAL, 
@@ -55,61 +55,42 @@ class Plant(entityext.GameEntity):
 
     # -------------------------------------------------- #
 
-    def __init__(self, name: str):
-        super().__init__(Plant.TYPE if not name else name, 0, 0)
-        self.aregist = Plant.ANIM_CATEGORY.create_registry_for_all()
-        self.sprite = self.aregist[Plant.IDLE_ANIM].get_frame()
-        self.hitbox = self.aregist[Plant.IDLE_ANIM].get_hitbox()
-        self.camera = None
+    def __init__(self):
+        super().__init__(Template.TYPE, 0, 0)
+        self.aregist = Template.ANIM_CATEGORY.create_registry_for_all()
+        self.sprite = self.aregist[Template.IDLE_ANIM].get_frame()
+        self.hitbox = self.aregist[Template.IDLE_ANIM].get_hitbox()
     
     def start(self):
         # whatever you want the entity to do before adding to world
-        self.camera = self.layer.camera
-        self.camera.set_target(self)
+        pass
 
     def update(self):
         # update function
-        entityext.update_ani_and_hitbox(self, Plant.IDLE_ANIM, handle=False)
+        entityext.update_ani_and_hitbox(self, Template.IDLE_ANIM, handle=False)
 
         # lerp
-        self.motion *= Plant.LC
+        self.motion *= Template.LC
 
         # insert movement logic etc
-        # movement
-        # if user_input.is_key_pressed(pygame.K_d):
-        #     self.motion.x += Plant.MS * clock.delta_time
-        # if user_input.is_key_pressed(pygame.K_a):
-        #     self.motion.x -= Plant.MS * clock.delta_time
-        # if user_input.is_key_pressed(pygame.K_w):
-        #     self.motion.y -= Plant.MS * clock.delta_time
-        # if user_input.is_key_pressed(pygame.K_s):
-        #     self.motion.y += Plant.MS * clock.delta_time
 
         # update entity in world
         self.layer.world.move_entity(self)
         self.move_to_position()
-        # update camera
-        # self.camera.campos -= self.motion
-        # self.camera.track_target()
-        # self.camera.update()
-        print(self, EGLOB.RENDER_DIS)
     
     def render(self, surface):
         # render function
         surface.blit(self.sprite if self.motion.x < 0 else pygame.transform.flip(self.sprite, True, False), 
-                    self.camera.get_target_rel_pos())
+                self.get_glob_pos())
 
     def debug(self, surface):
         # debug function
         super().debug(surface)
         # any addition rendering you want
-    
-    def __repr__(self) -> str:
-        return f"Plant: {self.name} | Id: {self.id}"
 
 # -------------------------------------------------- #
 # setup
-EntityTypes.register_entity_type(Plant.TYPE, Plant)
+EntityTypes.register_entity_type(Template.TYPE, Template)
 
 
 

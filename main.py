@@ -19,10 +19,10 @@ from engine import singleton as EGLOB
 WINDOW_CAPTION = "Default Title"
 WW = 1280
 WINDOW_SIZE = [WW, int(WW/16*9)]
-WW = 1280//3
+WW = 1280//4
 FB_SIZE = [WW, int(WW/16*9)]
 
-FPS = 60
+FPS = 30
 
 Window.create_window(WINDOW_CAPTION, WINDOW_SIZE[0], WINDOW_SIZE[1], pygame.RESIZABLE | pygame.DOUBLEBUF , 16)
 # window.set_icon()
@@ -33,13 +33,15 @@ fb = Window.create_framebuffer(FB_SIZE[0], FB_SIZE[1], flags=0, bits=32).convert
 EGLOB.DEBUG = False
 EGLOB.RENDER_DIS = [3, 2]
 
-background = (255, 255, 255)
+background = (153, 229, 80)
 
 # -------------------------------------------------- #
 # external imports
 import random
 
 from scripts.environment import grass
+
+from scripts.game import plant
 
 # -------------------------------------------------- #
 # default initializing world
@@ -53,6 +55,11 @@ _WORLD = __layer.world
 # -------------------------------------------------- #
 # object initialization
 
+# testing plant
+
+p = plant.Plant("PlantName")
+
+_HANDLER.add_entity(p)
 
 # grass
 left = -2
@@ -78,6 +85,9 @@ for x in range(left, right):
 _HANDLER.handle_changes()
 clock.start()
 while Window.running:
+    if user_input.is_key_pressed(pygame.K_LSHIFT) and user_input.is_key_clicked(pygame.K_d):
+        EGLOB.DEBUG = not EGLOB.DEBUG
+
     # -------------------------------------------------- #
     # update current scene
     if scenehandler.SceneHandler.CURRENT:
